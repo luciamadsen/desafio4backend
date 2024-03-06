@@ -27,12 +27,12 @@ io.on('connection', (socket) => {
   console.log('Usuario conectado');
 
   socket.on('addProduct', (product) => {
-    // agregar el producto
+    // agregar producto
     io.emit('updateProducts', { products: [] });
   });
 
   socket.on('deleteProduct', (productId) => {
-    // eliminar el producto
+    // eliminar producto
     io.emit('updateProducts', { products: [] });
   });
 
