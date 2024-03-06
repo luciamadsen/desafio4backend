@@ -1,0 +1,47 @@
+<!-- views/realTimeProducts.handlebars -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Time Products</title>
+</head>
+<body>
+  <h1>Lista de Productos en Tiempo Real</h1>
+  <ul>
+    {{#each products}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+
+  <!-- Formulario para agregar o eliminar productos -->
+  <form id="productForm">
+    <input type="text" id="productName" placeholder="Nombre del producto">
+    <button type="button" onclick="addProduct()">Agregar Producto</button>
+    <button type="button" onclick="deleteProduct()">Eliminar Producto</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    function addProduct() {
+      const productName = document.getElementById('productName').value;
+      socket.emit('addProduct', { name: productName });
+    }
+
+    function deleteProduct() {
+      // Lógica para obtener el ID del producto a eliminar
+      const productId = /* Obtener ID del producto */;
+      socket.emit('deleteProduct', productId);
+    }
+
+    // Escuchar evento de actualización de productos
+    socket.on('updateProducts', (data) => {
+      // Actualizar la lista de productos en la vista
+      // Puedes utilizar la variable 'data.products' para obtener la nueva lista
+    });
+  </script>
+</body>
+</html>
