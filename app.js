@@ -1,39 +1,34 @@
+
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 const exphbs = require('express-handlebars');
 const path = require('path');
+const routes = require('./routes'); 
+const ProductManager = require('./productManager'); 
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
-
+const productManager = new ProductManager();
 
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
-
-app.get('/', (req, res) => {
-  res.render('home', { products: [] });
-});
-
-app.get('/realtimeproducts', (req, res) => {
-  res.render('realTimeProducts', { products: [] });
-});
-
+app.use('/', routes);
 
 io.on('connection', (socket) => {
   console.log('Usuario conectado');
 
   socket.on('addProduct', (product) => {
-    // agregar producto
-    io.emit('updateProducts', { products: [] });
+    productManager.addProduct(product);
+    io.emit('updateProducts', { products: productManager.getProducts() });
   });
 
   socket.on('deleteProduct', (productId) => {
-    // eliminar producto
-    io.emit('updateProducts', { products: [] });
+    productManager.deleteProduct(productId);
+    io.emit('updateProducts', { products: productManager.getProducts() });
   });
 
   socket.on('disconnect', () => {
