@@ -1,20 +1,31 @@
-
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 const exphbs = require('express-handlebars');
 const path = require('path');
+const mongoose = require('mongoose');
 const routes = require('./routes'); 
-const ProductManager = require('./productManager'); 
+const ProductManager = require('./dao/productManager'); 
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 const productManager = new ProductManager();
 
+
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
+
+
+mongoose.connect('mongodb+srv://lunesdam:<password>@cluster0.6toldtb.mongodb.net/', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Conexión exitosa a la base de datos MongoDB');
+}).catch((error) => {
+  console.error('Error al conectar a la base de datos MongoDB:', error);
+});
 
 app.use('/', routes);
 
